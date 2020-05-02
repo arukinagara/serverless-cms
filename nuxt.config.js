@@ -1,5 +1,16 @@
+require('dotenv').config()
+const { API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID } = process.env
 
 export default {
+  server: { host: '0.0.0.0' },
+  env: {
+    API_KEY,
+    AUTH_DOMAIN,
+    DATABASE_URL,
+    PROJECT_ID,
+    STORAGE_BUCKET,
+    MESSAGING_SENDER_ID
+  },
   mode: 'universal',
   /*
   ** Headers of the page

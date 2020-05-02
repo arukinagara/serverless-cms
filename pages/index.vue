@@ -1,72 +1,57 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        serverless-cms
-      </h1>
-      <h2 class="subtitle">
-        My wondrous Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+    <div class="jumbotron">
+      <h1 class="display-4">arukinagara.kangaeru</h1>
+      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    </div>
+    <input class="form-control mb-4" type="text" placeholder="Default input">
+    <div class="row mb-4">
+      <div class="col-sm-4">
+        <post />
+      </div>
+      <div class="col-sm-4">
+        <post />
+      </div>
+      <div class="col-sm-4">
+        <post />
       </div>
     </div>
+    <div class="row mb-4">
+      <div class="col-sm-4">
+        <post />
+      </div>
+      <div class="col-sm-4">
+        <post />
+      </div>
+    </div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
-<script>
-import Logo from '~/components/Logo.vue'
-
+<script lang="ts">
+import post from '~/components/post.vue'
 export default {
+  head: {
+    title: 'arukinagara.kangaeru'
+  },
   components: {
-    Logo
-  }
+    post,
+  },
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
