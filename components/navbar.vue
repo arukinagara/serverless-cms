@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Vue, { PropOptions } from 'vue'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import firebase from '~/plugins/firebase'
 
 export default {
@@ -28,14 +28,15 @@ export default {
   props: {},
 
   data () {
-    return {
-      signedIn: false,
-      displayName: '',
-      photoURL: '',
-    }
+    return {}
   },
 
-  computed: {},
+  computed: mapState([
+    'counter',
+    'signedIn',
+    'displayName',
+    'photoURL',
+  ]),
 
   components: {},
 
@@ -43,11 +44,8 @@ export default {
     signIn () {
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).then((result) => {
-        if (result.user !== null) {
-          this.signedIn = true;
-          this.displayName = result.user.displayName;
-          this.photoURL = result.user.photoURL;
-        }
+        this.$store.commit('signIn', {displayName: result.user.displayName,
+                                      photoURL: result.user.photoURL});
       }).catch((error) => {
         console.log(error);
       });
@@ -55,12 +53,14 @@ export default {
 
     signOut () {
       firebase.auth().signOut().then(() => {
-        this.signedIn = false;
-        this.displayName = '';
-        this.photoURL = '';
+        this.$store.commit('signOut')
       }).catch((error) => {
         console.log(error);
       });
+    },
+
+    increment () {
+      this.$store.commit('increment')
     }
   },
 }

@@ -46,6 +46,7 @@
 
 <script lang="ts">
 import post from '~/components/post.vue'
+
 export default {
   head: {
     title: 'arukinagara.kangaeru'
