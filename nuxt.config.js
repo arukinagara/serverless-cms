@@ -74,6 +74,9 @@ export default {
     extend (config, ctx) {
     }
   },
+  generate: {
+    fallback: true
+  },
   markdownit: {
     preset: 'default',
     linkify: true,
