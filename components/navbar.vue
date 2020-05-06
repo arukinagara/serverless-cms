@@ -32,7 +32,6 @@ export default {
   },
 
   computed: mapState([
-    'counter',
     'signedIn',
     'displayName',
     'photoURL',
@@ -58,10 +57,6 @@ export default {
         console.log(error);
       });
     },
-
-    increment () {
-      this.$store.commit('increment')
-    }
   },
 }
 </script>

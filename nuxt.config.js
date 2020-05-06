@@ -55,6 +55,8 @@ export default {
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
+    // Doc: https://github.com/nuxt-community/modules/tree/master/packages/markdownit
+    '@nuxtjs/markdownit',
   ],
   /*
   ** Axios module configuration
@@ -71,5 +73,17 @@ export default {
     */
     extend (config, ctx) {
     }
-  }
+  },
+  markdownit: {
+    preset: 'default',
+    linkify: true,
+    breaks: true,
+    typographer: true,
+    injected: true,
+    use: [
+      'markdown-it-div',
+      'markdown-it-attrs',
+      'markdown-it-emoji',
+    ]
+  },
 }

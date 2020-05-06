@@ -7,7 +7,7 @@
     <input class="form-control mb-4" type="text" placeholder="Default input">
     <div class="row mb-4">
       <div class="col-sm-4">
-        <post />
+        <newPost />
       </div>
       <div class="col-sm-4">
         <post />
@@ -17,6 +17,9 @@
       </div>
     </div>
     <div class="row mb-4">
+      <div class="col-sm-4">
+        <post />
+      </div>
       <div class="col-sm-4">
         <post />
       </div>
@@ -46,6 +49,7 @@
 
 <script lang="ts">
 import post from '~/components/post.vue'
+import newPost from '~/components/new-post.vue'
 
 export default {
   head: {
@@ -53,6 +57,7 @@ export default {
   },
   components: {
     post,
+    newPost,
   },
 }
 </script>

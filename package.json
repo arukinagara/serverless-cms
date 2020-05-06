@@ -13,9 +13,14 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
+    "@nuxtjs/markdownit": "^1.2.9",
     "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0",
     "firebase": "^7.14.2",
+    "markdown-it": "^10.0.0",
+    "markdown-it-attrs": "^3.0.2",
+    "markdown-it-div": "^1.1.0",
+    "markdown-it-emoji": "^1.4.0",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {}
