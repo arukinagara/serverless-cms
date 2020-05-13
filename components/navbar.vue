@@ -2,7 +2,7 @@
   <nav class="navbar navbar-dark bg-dark mb-4">
     <a class="navbar-brand" href="#">arukinagara kangaeru</a>
     <div class="collapse d-flex justify-content-end">
-    <template v-if="signedIn">
+    <template v-if="auth">
       <img v-bind:src="photoURL" class="rounded-circle mr-2" width="30" height="30">
       <span class="navbar-text mr-3">{{ displayName }}</span>
       <button type="button"
@@ -31,11 +31,13 @@ export default {
     return {}
   },
 
-  computed: mapState([
-    'signedIn',
-    'displayName',
-    'photoURL',
-  ]),
+  computed: {
+    ...mapState({
+      auth: state => state.user.auth,
+      displayName: state => state.user.displayName,
+      photoURL: state => state.user.photoURL,
+    }),
+  },
 
   components: {},
 
@@ -43,8 +45,9 @@ export default {
     signIn () {
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).then((result) => {
-        this.$store.commit('signIn', {displayName: result.user.displayName,
-                                      photoURL: result.user.photoURL});
+        this.signedIn({displayName: result.user.displayName,
+                       email: result.user.email,
+                       photoURL: result.user.photoURL});
       }).catch((error) => {
         console.log(error);
       });
@@ -52,11 +55,16 @@ export default {
 
     signOut () {
       firebase.auth().signOut().then(() => {
-        this.$store.commit('signOut')
+        this.signedOut();
       }).catch((error) => {
         console.log(error);
       });
     },
+
+    ...mapMutations('user', [
+      'signedIn',
+      'signedOut',
+    ]),
   },
 }
 </script>

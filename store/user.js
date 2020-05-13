@@ -1,19 +1,22 @@
 export const state = () => ({
-  signedIn: '',
+  auth: false,
   displayName: '',
+  userId: '',
   photoURL: '',
 })
 
 export const mutations = {
-  signIn (state, user) {
-    state.signedIn = true;
+  signedIn (state, user) {
+    state.auth = true;
     state.displayName = user.displayName;
+    state.userId = user.email.split('@')[0];
     state.photoURL = user.photoURL;
   },
 
-  signOut (state) {
-    state.signedIn = false;
+  signedOut (state) {
+    state.auth = false;
     state.displayName = '';
+    state.userId = '';
     state.photoURL = '';
   }
 }
