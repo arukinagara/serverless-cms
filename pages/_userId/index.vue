@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <profile v-bind:profile="{ title: 'Oboegaki',
-                               text: 'ブログ形式の簡単なCMSです。記事を書くのに、マークダウン記法が使えます。' }" />
+    <profile v-bind:profile="{ title: this.$route.params.userId,
+                               text: '自分のプロフィールを書いてみましょう。' }" />
 
     <input class="form-control mb-4" type="text" placeholder="Default input">
 
@@ -20,10 +20,6 @@ import articleCard from '~/components/articleCard.vue'
 import profile from '~/components/profile.vue'
 
 export default {
-  head: {
-    title: 'Oboegaki'
-  },
-
   components: {
     articleCard,
     profile,

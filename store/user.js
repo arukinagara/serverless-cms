@@ -18,5 +18,5 @@ export const mutations = {
     state.displayName = '';
     state.userId = '';
     state.photoURL = '';
-  }
+  },
 }
