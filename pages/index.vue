@@ -3,7 +3,7 @@
     <profile v-bind:profile="{ title: 'Oboegaki',
                                text: 'ブログ形式の簡単なCMSです。記事を書くのに、マークダウン記法が使えます。' }" />
 
-    <input class="form-control mb-4" type="text" placeholder="Default input">
+    <tagForm v-on:input="tags = $event" v-bind:value="tags" />
 
     <div class="row row-cols-md-3 mb-4">
       <div class="col mb-4" v-for="article in concatenatedArticles" :key="article.articleId">
@@ -14,10 +14,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import firebase from '~/plugins/firebase'
-import articleCard from '~/components/articleCard.vue'
-import profile from '~/components/profile.vue'
+import { mapState, mapMutations } from 'vuex';
+import firebase from '~/plugins/firebase';
+import articleCard from '~/components/article-card.vue';
+import profile from '~/components/profile.vue';
+import tagForm from '~/components/tag-form.vue';
 
 export default {
   head: {
@@ -27,12 +28,17 @@ export default {
   components: {
     articleCard,
     profile,
+    tagForm,
   },
 
   data () {
     return {
-      articles: [],
+      tags: [],
     }
+  },
+
+  mounted() {
+    this.$store.dispatch('articles/updateArticles');
   },
 
   computed: {
@@ -43,25 +49,27 @@ export default {
         return this.articles;
       };
     },
+
     ...mapState({
       auth: state => state.user.auth,
       displayName: state => state.user.displayName,
       userId: state => state.user.userId,
       photoURL: state => state.user.photoURL,
+      articles: state => state.articles.list,
     }),
   },
 
-  asyncData ({ params }) {
-    const articles = [];
-    return firebase.firestore().collection('articles').orderBy('timestamp', 'desc').limit(9).get()
-      .then((result) => {
-        result.forEach((doc) => {
-          articles.push({ articleId: doc.id, userId: doc.data().userId, text: doc.data().text });
-        });
-        return { articles: articles };
-      }).catch((error) => {
-        console.log(error);
-      });
+  methods: {
+    ...mapMutations({
+      updateFilter: 'articles/updateFilter',
+    }),
   },
+
+  watch: {
+    tags: function (value) {
+      this.updateFilter(value);
+      this.$store.dispatch('articles/updateArticles');
+    }
+  }
 }
 </script>

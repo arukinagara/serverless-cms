@@ -1,11 +1,13 @@
 <template>
-  <articleForm v-bind:text="text" />
+  <div class="container">
+    <articleForm v-bind:text="text" v-bind:tags="tags" />
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import firebase from '~/plugins/firebase'
-import articleForm from '~/components/articleForm.vue'
+import articleForm from '~/components/article-form.vue'
 
 export default {
   components: {
@@ -14,7 +16,8 @@ export default {
 
   computed: {
     ...mapState({
-      text: state => state.text,
+      text: state => state.form.text,
+      tags: state => state.form.tags,
     }),
   },
 

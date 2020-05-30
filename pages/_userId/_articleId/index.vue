@@ -5,12 +5,17 @@
 
     <div v-html="$md.render(text)" />
 
+    <ul class="list-inline">
+      <li class="list-inline-item rounded border border-secondary px-2 py-1" v-for="(tag, index) in tags">#{{ tag }}</li>
+    </ul>
+
     <template v-if="userId === this.$route.params.userId">
       <nuxt-link type="button" class="btn btn-outline-secondary mr-1"
                  :to="{ name: 'userId-articleId-edit',
                         params: { userId: this.userId,
                                   articleId: this.$route.params.articleId }}">Edit</nuxt-link>
-      <button type="button" class="btn btn-outline-danger">Delete</button>
+
+      <button type="button" class="btn btn-outline-danger" v-on:click="showMsgBoxOne">Delete</button>
     </template>
   </div>
 </template>
@@ -22,7 +27,7 @@ import profile from '~/components/profile.vue'
 
 export default {
   created () {
-    this.initInput(this.text);
+    this.initInput({ text: this.text, tags: this.tags });
   },
 
   components: {
@@ -36,8 +41,28 @@ export default {
   },
 
   methods: {
+    showMsgBoxOne() {
+      this.$bvModal.msgBoxConfirm('記事を削除します', {
+        size: 'sm',
+        okVariant: 'outline-danger',
+        cancelVariant: 'outline-secondary'
+      }).then((value) => {
+        if (value) {
+          firebase.firestore().collection('articles').doc(this.$route.params.articleId).delete()
+            .then((result) => {
+              this.$router.push({name: 'userId',
+                                 params: { userId: this.$store.state.user.userId }});
+            }).catch((error) => {
+              console.log(error);
+            });
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+
     ...mapMutations({
-      initInput: 'initInput',
+      initInput: 'form/initInput',
     }),
   },
 
@@ -45,7 +70,8 @@ export default {
     return firebase.firestore().collection('articles').doc(params.articleId).get()
       .then((result) => {
         if (result.exists && params.userId == result.data().userId) {
-          return { text: result.data().text };
+          return { text: result.data().text,
+                   tags: result.data().tags };
         } else {
           error({ statusCode: 404, message: 'あれ？ページが見つかりません' })
         }

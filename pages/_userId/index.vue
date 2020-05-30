@@ -16,7 +16,7 @@
 <script>
 import { mapState } from 'vuex'
 import firebase from '~/plugins/firebase'
-import articleCard from '~/components/articleCard.vue'
+import articleCard from '~/components/article-card.vue'
 import profile from '~/components/profile.vue'
 
 export default {
