@@ -1,24 +1,19 @@
 <template>
   <div class="container">
-    <profile v-bind:profile="{ title: 'Oboegaki',
-                               text: 'ブログ形式の簡単なCMSです。記事を書くのに、マークダウン記法が使えます。' }" />
-
-    <tagForm v-on:input="tags = $event" v-bind:value="tags" />
-
-    <div class="row row-cols-md-3 mb-4">
-      <div class="col mb-4" v-for="article in concatenatedArticles" :key="article.articleId">
+    <div class="row row-cols-lg-3 mb-4">
+      <div class="col mb-4" v-for="article in articles" :key="article.articleId">
         <articleCard v-bind:article="article" />
       </div>
     </div>
+
+    <infinite-loading @infinite="infiniteHandler"></infinite-loading>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import firebase from '~/plugins/firebase';
+import { mapState, mapActions } from 'vuex';
+import InfiniteLoading from 'vue-infinite-loading';
 import articleCard from '~/components/article-card.vue';
-import profile from '~/components/profile.vue';
-import tagForm from '~/components/tag-form.vue';
 
 export default {
   head: {
@@ -27,49 +22,29 @@ export default {
 
   components: {
     articleCard,
-    profile,
-    tagForm,
-  },
-
-  data () {
-    return {
-      tags: [],
-    }
-  },
-
-  mounted() {
-    this.$store.dispatch('articles/updateArticles');
+    InfiniteLoading,
   },
 
   computed: {
-    concatenatedArticles () {
-      if (this.auth) {
-        return [{ articleId: 'new', userId: this.userId, text: '新しい記事' }].concat(this.articles);
-      } else {
-        return this.articles;
-      };
-    },
-
     ...mapState({
-      auth: state => state.user.auth,
-      displayName: state => state.user.displayName,
-      userId: state => state.user.userId,
-      photoURL: state => state.user.photoURL,
       articles: state => state.articles.list,
     }),
   },
 
   methods: {
-    ...mapMutations({
-      updateFilter: 'articles/updateFilter',
-    }),
-  },
+    infiniteHandler($state) {
+      this.fetch().then((last) =>{
+        if (last) {
+          $state.complete();
+        } else {
+          $state.loaded();
+        }
+      });
+    },
 
-  watch: {
-    tags: function (value) {
-      this.updateFilter(value);
-      this.$store.dispatch('articles/updateArticles');
-    }
-  }
+    ...mapActions('articles', [
+      'fetch',
+    ]),
+  },
 }
 </script>

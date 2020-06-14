@@ -7,8 +7,8 @@
 
       <div class="col-3 d-flex justify-content-end">
         <button type="button"
-                class="btn btn-outline-secondary mb-2"
-                v-on:click="saveArticle">Submit</button>
+                class="btn btn-info mb-2"
+                v-on:click="saveArticle">送信</button>
       </div>
 
       <div class="col-6">
@@ -18,17 +18,31 @@
 
     <div class="row mb-2">
       <div class="col-6">
-        <textarea class="form-control" v-model="$data._text" style="height: 70vh;" placeholder="text" />
+        <input type="text" class="form-control" v-model="$data._title" placeholder="title" />
       </div>
 
       <div class="col-6">
-        <div v-html="$md.render($data._text)" class="overflow-auto" style="height: 70vh;" />
+        <div v-html="$md.render($data._title)" class="overflow-auto" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-6">
+        <textarea class="form-control" v-model="$data._text" style="height: 65vh;" placeholder="text" />
+      </div>
+
+      <div class="col-6">
+        <div v-html="$md.render($data._text)" class="overflow-auto" style="height: 65vh;" />
       </div>
     </div>
 
     <div class="row">
       <div class="col-6">
-        <tagForm v-on:input="$data._tags = $event" v-bind:value="$data._tags" />
+        <b-form-tags v-model="$data._tags"
+                     class="form-control mb-4"
+                     remove-on-delete
+                     separator=" ,;"
+                     placeholder="tag" />
       </div>
 
       <div class="col-6">
@@ -41,18 +55,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import firebase from '~/plugins/firebase';
-import tagForm from '~/components/tag-form.vue';
 
 export default {
   name: 'articleForm',
 
-  components: {
-    tagForm,
-  },
-
   props: {
+    title: {
+      type: String,
+      default: '',
+    },
     text: {
       type: String,
       default: '',
@@ -65,6 +78,7 @@ export default {
 
   data () {
     return {
+      _title: this.title,
       _text: this.text,
       _tags: this.tags,
     }
@@ -72,23 +86,39 @@ export default {
 
   computed: mapState({
     userId: state => state.user.userId,
+    photoURL: state => state.user.photoURL,
+    list: state => state.articles.list,
   }),
 
   methods: {
     saveArticle () {
-      !this.text ? this.addArticle() : this.updateArticle();
+      if (this.$route.name == 'userId-new') {
+        this.addArticle();
+      } else if (this.$route.name == 'userId-articleId-edit') {
+        this.updateArticle();
+      }
     },
 
     addArticle () {
       firebase.firestore().collection('articles').add({
         userId: this.userId,
+        photoURL: this.photoURL,
+        title: this.$data._title,
         text: this.$data._text,
         tags: this.$data._tags,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       }).then((result) => {
-        this.$router.push({name: 'userId-articleId',
-                           params: { userId: this.userId,
-                                     articleId: result.id }});
+        this.add({ userId: this.userId,
+                   photoURL: this.photoURL,
+                   articleId: result.id,
+                   title: this.$data._title,
+                   text: this.$data._text,
+                   tags: this.$data._tags,
+                   timestamp: firebase.firestore.Timestamp.now(), });
+
+        this.$router.push({ name: 'userId-articleId',
+                            params: { userId: this.userId,
+                                      articleId: result.id }});
       }).catch((error) => {
         console.log(error);
       });
@@ -96,16 +126,27 @@ export default {
 
     updateArticle () {
       firebase.firestore().collection('articles').doc(this.$route.params.articleId).update({
+        title: this.$data._title,
         text: this.$data._text,
         tags: this.$data._tags,
       }).then((result) => {
-        this.$router.push({name: 'userId-articleId',
-                           params: { userId: this.userId,
-                                     articleId: this.$route.params.articleId }});
+        this.update({ articleId: this.$route.params.articleId,
+                      title: this.$data._title,
+                      text: this.$data._text,
+                      tags: this.$data._tags, });
+
+        this.$router.push({ name: 'userId-articleId',
+                            params: { userId: this.userId,
+                                      articleId: this.$route.params.articleId }});
       }).catch((error) => {
         console.log(error);
       });
     },
+
+    ...mapMutations('articles', [
+      'add',
+      'update',
+    ]),
   },
 }
 </script>

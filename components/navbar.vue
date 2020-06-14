@@ -2,31 +2,36 @@
   <nav class="navbar navbar-dark bg-dark mb-4">
     <nuxt-link to="/" class="navbar-brand">Oboegaki</nuxt-link>
 
-    <div class="collapse d-flex justify-content-end">
+    <div class="d-flex justify-content-end align-items-center">
 
       <template v-if="auth">
         <nuxt-link :to="{ name: 'userId', params: { userId: this.userId }}">
           <img v-bind:src="photoURL" class="rounded-circle mr-2" width="30" height="30">
-          <span class="navbar-text mr-3">{{ displayName }}</span>
-          <button type="button"
-                  class="btn btn-outline-secondary btn-sm float-right"
-                  v-on:click="signOut">Sign-out</button>
         </nuxt-link>
+        <nuxt-link :to="{ name: 'userId', params: { userId: this.userId }}">
+          <span class="navbar-text mr-3">{{ displayName }}</span>
+        </nuxt-link>
+        <button type="button"
+                class="btn btn-secondary btn-sm"
+                v-on:click="signOut">Sign-out</button>
       </template>
 
       <template v-else>
         <button type="button"
-                class="btn btn-outline-secondary btn-sm float-right"
+                class="btn btn-secondary btn-sm"
                 v-on:click="signIn">Sign-in with Google</button>
       </template>
+
+      <nuxt-link class="btn btn-info btn-sm ml-2"
+                 v-bind:class="{ disabled: !auth }"
+                 v-bind:to="{ name: 'userId-new', params: { userId: userId || 'placeholder' } }">投稿</nuxt-link>
 
     </div>
   </nav>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import firebase from '~/plugins/firebase'
+import { mapState, mapActions } from 'vuex';
 
 export default {
   computed: {
@@ -39,29 +44,10 @@ export default {
   },
 
   methods: {
-    signIn () {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(provider).then((result) => {
-        this.signedIn({displayName: result.user.displayName,
-                       email: result.user.email,
-                       photoURL: result.user.photoURL});
-      }).catch((error) => {
-        console.log(error);
-      });
-    },
-
-    signOut () {
-      firebase.auth().signOut().then(() => {
-        this.signedOut();
-      }).catch((error) => {
-        console.log(error);
-      });
-    },
-
-    ...mapMutations({
-      signedIn: 'user/signedIn',
-      signedOut: 'user/signedOut',
-    }),
+    ...mapActions('user', [
+      'signIn',
+      'signOut',
+    ]),
   },
 }
 </script>
