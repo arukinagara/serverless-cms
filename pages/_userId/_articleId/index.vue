@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <div class="row mb-2">
-      <div class="col-8 offset-2">
+      <div class="col-md-8 offset-md-2">
         <h1>{{ article.title }}</h1>
       </div>
     </div>
 
     <div class="row mb-4">
-      <div class="col-8 offset-2 d-flex">
+      <div class="col-md-8 offset-md-2 d-flex">
         <img v-bind:src="article.photoURL" class="mr-2 rounded-circle" width="30" height="30" />
 
         <small>
@@ -44,13 +44,13 @@
     </div>
 
     <div class="row mb-4">
-      <div class="col-8 offset-2">
+      <div class="col-md-8 offset-md-2">
         <div v-html="$md.render(article.text)" />
       </div>
     </div>
 
     <div class="row">
-      <div class="col-8 offset-2">
+      <div class="col-md-8 offset-md-2">
         <ul class="list-inline">
           <li class="list-inline-item border rounded px-2 py-1" v-for="tag in article.tags">
             #{{ tag }}
