@@ -3,9 +3,16 @@ import firebase from '~/plugins/firebase';
 export const state = () => ({
   list: [],
   last: false,
+  userId: '',
 })
 
 export const mutations = {
+  init (state, userId) {
+    state.list = [];
+    state.last = false;
+    state.userId = userId;
+  },
+
   fetch (state, articles) {
     if (articles.length < 9) {
       state.last = true;
@@ -36,9 +43,17 @@ export const mutations = {
 }
 
 export const actions = {
-  fetch (context) {
+  fetch (context, userId = '') {
+    //console.log(context.state.userId);
+    //console.log(userId);
+    //if (context.state.userId !== userId) {
+    //  context.commit('init', userId);
+    //}
+
     const articles = [];
-    const articlesRef = firebase.firestore().collection('articles').orderBy('timestamp', 'desc');
+    const articlesRef = userId ?
+                            firebase.firestore().collection('articles').where('userId', '==', userId).orderBy('timestamp', 'desc') :
+                            firebase.firestore().collection('articles').orderBy('timestamp', 'desc');
     const articlesQuery = context.state.list.length ?
                               articlesRef.startAfter(context.state.list[context.state.list.length - 1].timestamp) :
                               articlesRef;

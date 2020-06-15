@@ -11,5 +11,7 @@ export default {
   components: {
     articleForm,
   },
+
+  middleware: 'auth',
 }
 </script>

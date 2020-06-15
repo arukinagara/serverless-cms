@@ -4,10 +4,21 @@
       <div class="container">
         <div class="row">
           <div class="col d-flex pl-0">
-            <img v-bind:src="article.photoURL" class="mr-2 rounded-circle" width="30" height="30" />
+            <nuxt-link v-bind:to="{ name: 'userId',
+                                    params: { userId: article.userId }}">
+              <img v-bind:src="article.photoURL" class="mr-2 rounded-circle" width="30" height="30" />
+            </nuxt-link>
             <small>
-              <p class="mb-0">{{ article.userId }}</p>
-              <p class="mb-0 text-secondary">{{ article.timestamp.toDate().toLocaleString('ja-JP') }}</p>
+              <nuxt-link class="text-decoration-none text-body"
+                         v-bind:to="{ name: 'userId',
+                                      params: { userId: article.userId }}">
+                <p class="mb-0">{{ article.userId }}</p>
+              </nuxt-link>
+              <nuxt-link class="mb-0 text-decoration-none text-secondary"
+                         v-bind:to="{ name: 'userId-articleId',
+                                      params: { userId: article.userId, articleId: article.articleId }}">
+                <p class="mb-0 text-secondary">{{ article.timestamp.toDate().toLocaleString('ja-JP') }}</p>
+              </nuxt-link>
             </small>
           </div>
         </div>
@@ -46,7 +57,7 @@
 
       <nuxt-link class="btn btn-link btn-sm pl-0 mb-3"
                  v-bind:to="{ name: 'userId-articleId',
-                              params: { userId: article.userId, articleId: article.articleId } }">もっとみる</nuxt-link>
+                              params: { userId: article.userId, articleId: article.articleId }}">もっとみる</nuxt-link>
 
       <ul class="list-inline">
         <li class="list-inline-item border rounded px-2 py-1" v-for="tag in article.tags">

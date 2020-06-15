@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row row-cols-lg-3 mb-4">
+    <div class="row row-cols-1 row-cols-lg-3 mb-4">
       <div class="col mb-4" v-for="article in articles" :key="article.articleId">
         <articleCard v-bind:article="article" />
       </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
 import articleCard from '~/components/article-card.vue';
 
@@ -25,15 +25,22 @@ export default {
     InfiniteLoading,
   },
 
+  mounted () {
+    if (this.userId !== '') {
+      this.init();
+    }
+  },
+
   computed: {
     ...mapState({
       articles: state => state.articles.list,
+      userId: state => state.articles.userId,
     }),
   },
 
   methods: {
     infiniteHandler($state) {
-      this.fetch().then((last) =>{
+      this.fetch().then((last) => {
         if (last) {
           $state.complete();
         } else {
@@ -41,6 +48,10 @@ export default {
         }
       });
     },
+
+    ...mapMutations('articles', [
+      'init',
+    ]),
 
     ...mapActions('articles', [
       'fetch',

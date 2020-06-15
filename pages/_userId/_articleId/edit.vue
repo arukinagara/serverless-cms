@@ -20,5 +20,7 @@ export default {
       tags: state => state.form.tags,
     }),
   },
+
+  middleware: 'auth',
 }
 </script>
