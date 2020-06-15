@@ -8,7 +8,8 @@
       <div class="col-3 d-flex justify-content-end">
         <button type="button"
                 class="btn btn-info mb-2"
-                v-on:click="saveArticle">送信</button>
+                v-on:click="saveArticle"
+                v-bind:disabled="!$data._title || !$data._text">送信</button>
       </div>
 
       <div class="col-6">
