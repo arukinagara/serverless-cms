@@ -1,33 +1,43 @@
 <template>
-  <nav class="navbar navbar-dark bg-dark mb-4">
-    <nuxt-link to="/" class="navbar-brand">Oboegaki</nuxt-link>
+  <b-navbar toggleable="md" type="dark" variant="dark" class="mb-4">
+    <nuxt-link to="/">
+      <b-navbar-brand>Oboegaki</b-navbar-brand>
+    </nuxt-link>
 
-    <div class="d-flex justify-content-end align-items-center">
+    <b-navbar-toggle target="nav-collapse" class="my-1"/>
 
-      <template v-if="auth">
-        <nuxt-link :to="{ name: 'userId', params: { userId: this.userId }}">
-          <img v-bind:src="photoURL" class="rounded-circle mr-2" width="30" height="30">
-        </nuxt-link>
-        <nuxt-link :to="{ name: 'userId', params: { userId: this.userId }}">
-          <span class="navbar-text mr-3">{{ displayName }}</span>
-        </nuxt-link>
-        <button type="button"
-                class="btn btn-secondary btn-sm"
-                v-on:click="signOut">Sign-out</button>
-      </template>
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav class="ml-auto">
+        <b-nav-text>
+          <template v-if="auth">
+            <nuxt-link :to="{ name: 'userId', params: { userId: this.userId }}">
+              <img v-bind:src="photoURL" class="rounded-circle mr-2" width="30" height="30">
+            </nuxt-link>
 
-      <template v-else>
-        <button type="button"
-                class="btn btn-secondary btn-sm"
-                v-on:click="signIn">Sign-in with Google</button>
-      </template>
+            <nuxt-link :to="{ name: 'userId', params: { userId: this.userId }}">
+              <span class="navbar-text mr-3">{{ displayName }}</span>
+            </nuxt-link>
 
-      <nuxt-link class="btn btn-info btn-sm ml-2"
+            <button type="button"
+                    class="btn btn-secondary btn-sm mr-2"
+                    v-on:click="signOut">Sign-out</button>
+          </template>
+
+          <template v-else>
+            <button type="button"
+                    class="btn btn-secondary btn-sm mr-2"
+                    v-on:click="signIn">Sign-in with Google</button>
+          </template>
+        </b-nav-text>
+
+        <b-nav-text>
+          <nuxt-link class="btn btn-info btn-sm"
                  v-bind:class="{ disabled: !auth }"
                  v-bind:to="{ name: 'userId-new', params: { userId: userId || 'placeholder' } }">投稿</nuxt-link>
-
-    </div>
-  </nav>
+        </b-nav-text>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
 </template>
 
 <script>
