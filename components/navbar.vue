@@ -28,12 +28,10 @@
                     class="btn btn-secondary btn-sm mr-2"
                     v-on:click="signIn">Sign-in with Google</button>
           </template>
-        </b-nav-text>
 
-        <b-nav-text>
           <nuxt-link class="btn btn-info btn-sm"
                  v-bind:class="{ disabled: !auth }"
-                 v-bind:to="{ name: 'userId-new', params: { userId: userId || 'placeholder' } }">投稿</nuxt-link>
+                 v-bind:to="{ name: 'userId-new', params: { userId: userId || 'placeholder' }}">投稿</nuxt-link>
         </b-nav-text>
       </b-navbar-nav>
     </b-collapse>
